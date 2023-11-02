@@ -7,7 +7,7 @@ def list_background_processes():
         operating_system = platform.system()
 
         if operating_system == 'Windows':
-            output = subprocess.check_output("tasklist", shell=True, text=True)
+            output = subprocess.check_output(["tasklist"], text=True)
             lines = output.strip().split('\n')[3:]  # Skip the first 3 lines of the header
             for line in lines:
                 fields = line.split()
@@ -23,6 +23,8 @@ def list_background_processes():
                 pid = fields[0]
                 name = fields[-1]
                 processes.append((pid, name))
+
+        # Add support for other operating systems if needed
         else:
             print("Unsupported operating system.")
 
