@@ -1,5 +1,6 @@
 import subprocess
 import platform
+import tkinter as tk
 
 def list_background_processes():
     processes = []
@@ -29,12 +30,34 @@ def list_background_processes():
             print("Unsupported operating system.")
 
     except subprocess.CalledProcessError as e:
-        print("Error. Unable to get process list:", e)
+        processes.append(("Error", "Unable to get process list"))
 
     return processes
 
-if __name__ == "__main__":
+def update_processes_list():
     background_processes = list_background_processes()
-    print("Processes running in the background:")
+    process_list.delete(0, tk.END)  # Clear the listbox
     for pid, name in background_processes:
-        print(f"PID: {pid}, Name: {name}")
+        process_list.insert(tk.END, f"PID: {pid}, Name: {name}")
+
+# Tkinter GUI
+root = tk.Tk()
+root.title("Background Processes")
+
+frame = tk.Frame(root)
+frame.pack(padx=10, pady=10)
+
+process_list = tk.Listbox(frame, width=40, height=15)
+process_list.pack(side=tk.LEFT)
+
+scrollbar = tk.Scrollbar(frame, orient=tk.VERTICAL)
+scrollbar.config(command=process_list.yview)
+scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+process_list.config(yscrollcommand=scrollbar.set)
+
+refresh_button = tk.Button(root, text="Refresh Processes", command=update_processes_list)
+refresh_button.pack()
+
+update_processes_list()  # Initial population of the process list
+
+root.mainloop()
