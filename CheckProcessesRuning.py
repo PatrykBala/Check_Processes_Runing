@@ -1,6 +1,7 @@
 import subprocess
 import platform
 import tkinter as tk
+from tkinter import filedialog
 
 def list_background_processes():
     processes = []
@@ -40,6 +41,14 @@ def update_processes_list():
     for pid, name in background_processes:
         process_list.insert(tk.END, f"PID: {pid}, Name: {name}")
 
+def save_to_file():
+    background_processes = list_background_processes()
+    file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt")])
+    if file_path:
+        with open(file_path, 'w') as file:
+            for pid, name in background_processes:
+                file.write(f"PID: {pid}, Name: {name}\n")
+
 # Tkinter GUI
 root = tk.Tk()
 root.title("Background Processes")
@@ -57,6 +66,9 @@ process_list.config(yscrollcommand=scrollbar.set)
 
 refresh_button = tk.Button(root, text="Refresh Processes", command=update_processes_list)
 refresh_button.pack()
+
+save_button = tk.Button(root, text="Save to File", command=save_to_file)
+save_button.pack()
 
 update_processes_list()  # Initial population of the process list
 
