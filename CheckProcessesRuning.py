@@ -2,6 +2,7 @@ import subprocess
 import platform
 import tkinter as tk
 from tkinter import filedialog
+from tkinter import ttk
 
 def list_background_processes():
     processes = []
@@ -61,31 +62,33 @@ def save_to_file():
 root = tk.Tk()
 root.title("Background Processes")
 
-frame = tk.Frame(root)
-frame.pack(padx=10, pady=10)
+style = ttk.Style()
+style.theme_use('clam')
+
+frame = ttk.Frame(root, padding=10)
+frame.grid(row=0, column=0, padx=10, pady=10)
 
 process_list = tk.Listbox(frame, width=40, height=15)
-process_list.pack(side=tk.LEFT)
+process_list.grid(row=0, column=0, padx=(0, 5), sticky="nsew")
 
-scrollbar = tk.Scrollbar(frame, orient=tk.VERTICAL)
-scrollbar.config(command=process_list.yview)
-scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+scrollbar = ttk.Scrollbar(frame, orient=tk.VERTICAL, command=process_list.yview)
+scrollbar.grid(row=0, column=1, sticky='ns')
 process_list.config(yscrollcommand=scrollbar.set)
 
-refresh_button = tk.Button(root, text="Refresh Processes", command=update_processes_list)
-refresh_button.pack()
+refresh_button = ttk.Button(root, text="Refresh Processes", command=update_processes_list)
+refresh_button.grid(row=1, column=0, pady=5)
 
-search_frame = tk.Frame(root)
-search_frame.pack(padx=10, pady=5)
+search_frame = ttk.Frame(root)
+search_frame.grid(row=2, column=0, pady=5)
 
-search_entry = tk.Entry(search_frame)
-search_entry.pack(side=tk.LEFT)
+search_entry = ttk.Entry(search_frame)
+search_entry.grid(row=0, column=0, padx=(0, 5))
 
-search_button = tk.Button(search_frame, text="Search", command=search_processes)
-search_button.pack(side=tk.LEFT)
+search_button = ttk.Button(search_frame, text="Search", command=search_processes)
+search_button.grid(row=0, column=1)
 
-save_button = tk.Button(root, text="Save to File", command=save_to_file)
-save_button.pack()
+save_button = ttk.Button(root, text="Save to File", command=save_to_file)
+save_button.grid(row=3, column=0, pady=5)
 
 update_processes_list()  # Initial population of the process list
 
